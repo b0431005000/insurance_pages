@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富邦台幣分紅保單 (試用版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .nav-item.active {
+            background-color: #4f46e5;
+            color: white;
+            border-right: 4px solid #c7d2fe;
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: #1e293b;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen text-slate-800 font-sans flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 z-20 transition-all duration-300">
+        <div class="p-6 border-b border-slate-800 flex items-center gap-3">
+            <div
+                class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white shadow-lg shadow-indigo-500/50">
+                <i class="fa-solid fa-vault text-sm"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-white tracking-wide">富邦台幣分紅保單</h1>
+                <p class="text-[10px] text-slate-500 font-mono uppercase">V9.7 IRR-Dynamic</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto p-3 space-y-6">
+            <div>
+                <div class="px-3 mb-2 text-[10px] font-bold uppercase text-slate-500 tracking-wider">退休現金流系列</div>
+
+                <button onclick="switchProduct('pak')" id="nav-pak"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-hand-holding-dollar w-5 text-center text-yellow-400"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">月月紅富 (PAK)</div>
+                        <div class="text-[10px] opacity-70">2年繳 | 月配息</div>
+                    </div>
+                </button>
+
+                <button onclick="switchProduct('pala')" id="nav-pala"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-umbrella-beach w-5 text-center text-orange-400"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">活利優退 (PALA)</div>
+                        <div class="text-[10px] opacity-70">自選退休 | 延遲給付</div>
+                    </div>
+                </button>
+
+                <button onclick="switchProduct('paj')" id="nav-paj"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-wheelchair w-5 text-center"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">優富年年 (PAJ)</div>
+                        <div class="text-[10px] opacity-70">繳費至65歲滿期</div>
+                    </div>
+                </button>
+            </div>
+
+            <div>
+                <div class="px-3 mb-2 text-[10px] font-bold uppercase text-slate-500 tracking-wider">資產增值系列</div>
+                <button onclick="switchProduct('pag')" id="nav-pag"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-sack-dollar w-5 text-center"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">紅運多多 (PAG)</div>
+                        <div class="text-[10px] opacity-70">3年繳 | 快速回本</div>
+                    </div>
+                </button>
+                <button onclick="switchProduct('pac')" id="nav-pac"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">紅旺年年 (PAC)</div>
+                        <div class="text-[10px] opacity-70">6年繳 | 雙重紅利</div>
+                    </div>
+                </button>
+                <button onclick="switchProduct('pai')" id="nav-pai"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-gem w-5 text-center"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">鴻運久久 (PAI)</div>
+                        <div class="text-[10px] opacity-70">20年繳 | 穩健增額</div>
+                    </div>
+                </button>
+            </div>
+
+            <div>
+                <div class="px-3 mb-2 text-[10px] font-bold uppercase text-slate-500 tracking-wider">資產傳承系列</div>
+
+                <button onclick="switchProduct('pao')" id="nav-pao"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-landmark w-5 text-center text-emerald-400"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">富裕長紅 (PAO)</div>
+                        <div class="text-[10px] opacity-70">躉繳 | 大額資產</div>
+                    </div>
+                </button>
+
+                <button onclick="switchProduct('pae')" id="nav-pae"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-users-rays w-5 text-center"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">紅運年代 (PAE)</div>
+                        <div class="text-[10px] opacity-70">20年繳 | 高壽險保障</div>
+                    </div>
+                </button>
+                <button onclick="switchProduct('paf')" id="nav-paf"
+                    class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mb-1">
+                    <i class="fa-solid fa-shield-halved w-5 text-center"></i>
+                    <div class="text-left">
+                        <div class="text-sm font-bold">紅運長樂 (PAF)</div>
+                        <div class="text-[10px] opacity-70">20年繳 | 增額終身</div>
+                    </div>
+                </button>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-800/50">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="relative flex h-2 w-2">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-bold text-emerald-400">IRR 引擎連線中</span>
+            </div>
+            <p class="text-[10px] text-slate-400">選單切換即時演算年化報酬</p>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-50 relative">
+
+        <header
+            class="h-16 bg-white border-b border-gray-200 px-6 flex items-center justify-between shrink-0 z-10 shadow-sm">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2" id="header-title">
+                    --
+                </h2>
+                <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
+                    <span class="bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-medium" id="header-type">--</span>
+                    <i class="fa-solid fa-circle text-[4px] text-gray-300"></i>
+                    <span id="header-desc">--</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="bg-gray-100 p-1 rounded-lg flex border border-gray-200">
+                    <button onclick="setScenario('high')" id="btn-high"
+                        class="px-4 py-1.5 rounded-md text-xs font-bold transition shadow-sm bg-white text-indigo-600">
+                        最可能紅利 (3.5%)
+                    </button>
+                    <button onclick="setScenario('low')" id="btn-low"
+                        class="px-4 py-1.5 rounded-md text-xs font-bold transition text-gray-500 hover:text-gray-700">
+                        較低紅利 (2.0%)
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in" id="content-area">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">累積總繳保費</p>
+                            <p class="text-2xl font-bold text-slate-700 mt-1" id="kpi-prem">--</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                        <div class="bg-slate-400 h-full rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">預估總資產 (含紅利)</p>
+                            <p class="text-2xl font-bold text-indigo-600 mt-1" id="kpi-value">--</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-indigo-400 mt-3 font-medium flex items-center gap-1">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="kpi-year-label">--</span>
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider" id="kpi-irr-title">內部報酬率
+                                (IRR)</p>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1" id="kpi-irr">--%</p>
+                        </div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500">
+                            <i class="fa-solid fa-percent"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center gap-2">
+                        <span
+                            class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">含生存金</span>
+                        <span class="text-[10px] text-gray-400" id="kpi-irr-desc">至選定年份</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">推薦客群</p>
+                            <p class="text-lg font-bold text-slate-800 mt-1" id="kpi-target">--</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                            <i class="fa-solid fa-user-tag"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3" id="kpi-feature">--</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+                <div class="xl:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-slate-700 flex items-center gap-2">
+                            <span class="w-1 h-5 bg-indigo-500 rounded-full"></span>
+                            資產增長趨勢 (堆疊分析)
+                        </h3>
+                        <div class="flex gap-4 text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2 h-2 rounded-full bg-slate-300"></div>本金
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>保證值
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2 h-2 rounded-full bg-amber-400"></div>預估紅利
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-80 w-full relative">
+                        <canvas id="assetChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                    <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                        <span class="w-1 h-5 bg-rose-500 rounded-full"></span>
+                        宣告利率真實性檢測
+                    </h3>
+                    <div class="flex-1 min-h-[200px] relative">
+                        <canvas id="benchmarkChart"></canvas>
+                    </div>
+                    <div class="mt-4 bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-gray-600">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="w-2 h-2 rounded-full bg-rose-500"></div>
+                            <span>實際宣告 (2023-24 達標)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full border border-slate-400 border-dashed"></div>
+                            <span>建議書預期 (3.5%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 bg-slate-50/50 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="font-bold text-sm text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol text-indigo-300"></i>
+                        年度現金流詳細報表
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-400">設定試算年期:</span>
+                        <select id="year-select"
+                            class="text-xs border border-gray-200 rounded p-1 bg-white focus:ring-1 focus:ring-indigo-500 outline-none"
+                            onchange="renderView()">
+                            <option value="10">前 10 年</option>
+                            <option value="20">前 20 年</option>
+                            <option value="30">前 30 年</option>
+                            <option value="50">至 50 年 (全覽)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto max-h-[500px]">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-gray-500 uppercase bg-slate-50 sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="px-6 py-3 w-20">年度</th>
+                                <th class="px-6 py-3">累積保費</th>
+                                <th class="px-6 py-3 text-green-600">生存金<br><span
+                                        class="text-[10px] text-gray-400">(現金流)</span></th>
+                                <th class="px-6 py-3 text-blue-600">保證解約金<br><span
+                                        class="text-[10px] text-gray-400">(A)</span></th>
+                                <th class="px-6 py-3 text-amber-600 bg-amber-50/30">總解約金<br><span
+                                        class="text-[10px] text-gray-400">(A+紅利)</span></th>
+                                <th class="px-6 py-3">狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table-body" class="divide-y divide-slate-100">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // =========================================================================
+        // 1. 產品核心數據庫 (Repository) - 50Y Full Data
+        // =========================================================================
+        const database = {
+            pak: { meta: { name: "月月紅富 (PAK)", type: "退休現金流 (月配)", desc: "50歲男性 / 2年繳 / 保額8萬", target: "即時現金流需求", feature: "繳費2年，首月即領，創造月退俸" }, rows: [{ y: 1, p_acc: 1054441, surv: 21120, guar: 596488, high: 596488, low: 596488 }, { y: 2, p_acc: 2108882, surv: 44160, guar: 1295024, high: 1325798, low: 1307604 }, { y: 5, p_acc: 2108882, surv: 42144, guar: 1491984, high: 1612691, low: 1540566 }, { y: 10, p_acc: 2108882, surv: 38976, guar: 1536528, high: 1940408, low: 1749214 }, { y: 20, p_acc: 2108882, surv: 33312, guar: 1311824, high: 2033062, low: 1637054 }, { y: 30, p_acc: 2108882, surv: 28512, guar: 1124704, high: 2161924, low: 1547388 }, { y: 40, p_acc: 2108882, surv: 24960, guar: 954120, high: 2320414, low: 1463927 }, { y: 50, p_acc: 2108882, surv: 21984, guar: 811784, high: 2572151, low: 1408935 }] },
+            pala: { meta: { name: "活利優退 (PALA)", type: "退休規劃 (延遲)", desc: "40歲男性 / 6年繳 / 65歲起領", target: "青壯年存退休金", feature: "自選退休年齡，紅利滾入保額" }, rows: [{ y: 1, p_acc: 596820, surv: 0, guar: 324300, high: 324300, low: 324300 }, { y: 6, p_acc: 3580920, surv: 0, guar: 3085800, high: 3335513, low: 3221194 }, { y: 10, p_acc: 3580920, surv: 0, guar: 3228000, high: 3803618, low: 3520719 }, { y: 20, p_acc: 3580920, surv: 0, guar: 3526800, high: 4970643, low: 4136194 }, { y: 25, p_acc: 3580920, surv: 150000, guar: 3536400, high: 5461637, low: 4307532 }, { y: 30, p_acc: 3580920, surv: 139200, guar: 2960100, high: 5061793, low: 3776545 }, { y: 40, p_acc: 3580920, surv: 120000, guar: 1899900, high: 4074017, low: 2701441 }, { y: 50, p_acc: 3580920, surv: 103500, guar: 911400, high: 2720559, low: 1557358 }] },
+            pao: { meta: { name: "富裕長紅 (PAO)", type: "資產傳承 (躉繳)", desc: "50歲男性 / 躉繳 / 保額150萬", target: "高資產/遺產規劃", feature: "一次繳清，紅利複利滾存" }, rows: [{ y: 1, p_acc: 1403625, surv: 0, guar: 976800, high: 976800, low: 976800 }, { y: 3, p_acc: 1403625, surv: 0, guar: 1059000, high: 1108215, low: 1080399 }, { y: 5, p_acc: 1403625, surv: 0, guar: 1331850, high: 1432811, low: 1375733 }, { y: 10, p_acc: 1403625, surv: 0, guar: 1398750, high: 1725704, low: 1558046 }, { y: 20, p_acc: 1403625, surv: 0, guar: 1511850, high: 2218446, low: 1832588 }, { y: 30, p_acc: 1403625, surv: 0, guar: 1627800, high: 2822552, low: 2154225 }, { y: 40, p_acc: 1403625, surv: 0, guar: 1742250, high: 3560894, low: 2523435 }, { y: 50, p_acc: 1403625, surv: 0, guar: 1852650, high: 4493726, low: 2953747 }] },
+            paj: { meta: { name: "優富年年 (PAJ)", type: "退休規劃", desc: "35歲男性 / 繳費至65歲", target: "一般上班族", feature: "繳費期間長，負擔輕" }, rows: [{ y: 1, p_acc: 21533, surv: 0, guar: 6750, high: 6750, low: 6750 }, { y: 10, p_acc: 215330, surv: 0, guar: 161070, high: 249892, low: 183594 }, { y: 20, p_acc: 430660, surv: 0, guar: 348810, high: 522844, low: 432605 }, { y: 30, p_acc: 645990, surv: 22680, guar: 534660, high: 831546, low: 703076 }, { y: 40, p_acc: 645990, surv: 20520, guar: 367860, high: 654939, low: 575482 }, { y: 50, p_acc: 645990, surv: 18360, guar: 196530, high: 481177, low: 426466 }] },
+            pag: { meta: { name: "紅運多多 (PAG)", type: "資產累積", desc: "50歲男性 / 3年繳 / 保額80萬", target: "快速回本需求", feature: "3年繳，第5-6年保本" }, rows: [{ y: 1, p_acc: 733510, surv: 14720, guar: 406560, high: 406560, low: 406560 }, { y: 3, p_acc: 2200530, surv: 10880, guar: 1452960, high: 1509990, low: 1476295 }, { y: 10, p_acc: 2200530, surv: 12000, guar: 1978800, high: 2395863, low: 2194921 }, { y: 20, p_acc: 2200530, surv: 12000, guar: 2035120, high: 2944455, low: 2451958 }, { y: 30, p_acc: 2200530, surv: 12000, guar: 2106560, high: 3627467, low: 2767855 }, { y: 40, p_acc: 2200530, surv: 12000, guar: 2185000, high: 4810230, low: 3250000 }, { y: 50, p_acc: 2200530, surv: 12000, guar: 2260000, high: 6520300, low: 3820000 }] },
+            pac: { meta: { name: "紅旺年年 (PAC)", type: "資產累積", desc: "40歲男性 / 6年繳 / 保額400萬", target: "穩健累積資產", feature: "6年繳，中長期效益佳" }, rows: [{ y: 1, p_acc: 701610, surv: 7200, guar: 354400, high: 354400, low: 354400 }, { y: 6, p_acc: 4209660, surv: 43200, guar: 3582000, high: 3833207, low: 3718417 }, { y: 10, p_acc: 4209660, surv: 46000, guar: 3674400, high: 4235904, low: 3922811 }, { y: 20, p_acc: 4209660, surv: 46000, guar: 3729600, high: 5046426, low: 4179610 }, { y: 30, p_acc: 4209660, surv: 46000, guar: 3787600, high: 6094064, low: 4491722 }, { y: 40, p_acc: 4209660, surv: 46000, guar: 3850000, high: 8250000, low: 5200000 }, { y: 50, p_acc: 4209660, surv: 46000, guar: 3920000, high: 11050000, low: 6100000 }] },
+            pae: { meta: { name: "紅運年代 (PAE)", type: "資產傳承", desc: "45歲男性 / 20年繳 / 保額600萬", target: "家庭支柱", feature: "高保額壽險保障" }, rows: [{ y: 1, p_acc: 366795, surv: 5400, guar: 40200, high: 40200, low: 40200 }, { y: 20, p_acc: 7335900, surv: 48000, guar: 5934600, high: 7897992, low: 7077371 }, { y: 30, p_acc: 7335900, surv: 46200, guar: 5925600, high: 9767634, low: 7840229 }, { y: 40, p_acc: 7335900, surv: 46200, guar: 5898000, high: 12042404, low: 8688473 }, { y: 50, p_acc: 7335900, surv: 46200, guar: 5850000, high: 16500000, low: 9800000 }] },
+            pai: { meta: { name: "鴻運久久 (PAI)", type: "資產累積", desc: "45歲男性 / 20年繳 / 保額400萬", target: "長期儲蓄", feature: "穩健增額" }, rows: [{ y: 1, p_acc: 185250, surv: 0, guar: 190000, high: 190000, low: 190000 }, { y: 20, p_acc: 3705000, surv: 0, guar: 3121200, high: 4129493, low: 3698186 }, { y: 30, p_acc: 3705000, surv: 0, guar: 3340000, high: 5371953, low: 4308611 }, { y: 40, p_acc: 3705000, surv: 0, guar: 3550000, high: 7550000, low: 5100000 }, { y: 50, p_acc: 3705000, surv: 0, guar: 3780000, high: 10600000, low: 6200000 }] },
+            paf: { meta: { name: "紅運長樂 (PAF)", type: "資產傳承", desc: "45歲男性 / 20年繳 / 保額150萬", target: "傳承規劃", feature: "長期增值" }, rows: [{ y: 1, p_acc: 162141, surv: 0, guar: 0, high: 225000, low: 225000 }, { y: 20, p_acc: 3242820, surv: 0, guar: 2833500, high: 3561670, low: 3200801 }, { y: 30, p_acc: 3242820, surv: 0, guar: 3065250, high: 4841692, low: 3886033 }, { y: 40, p_acc: 3242820, surv: 0, guar: 3280000, high: 6650000, low: 4600000 }, { y: 50, p_acc: 3242820, surv: 0, guar: 3500000, high: 9150000, low: 5500000 }] }
+        };
+
+        // =========================================================================
+        // 2. 邏輯控制 (Controller)
+        // =========================================================================
+        let currentProduct = 'pak';
+        let currentScenario = 'high';
+        let assetChartInstance = null;
+        let benchmarkChartInstance = null;
+
+        function init() {
+            switchProduct('pak');
+        }
+
+        function switchProduct(pid) {
+            currentProduct = pid;
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const btn = document.getElementById(`nav-${pid}`);
+            if (btn) btn.classList.add('active');
+
+            const meta = database[pid].meta;
+            document.getElementById('header-title').textContent = meta.name;
+            document.getElementById('header-type').textContent = meta.type;
+            document.getElementById('header-desc').textContent = meta.desc;
+
+            const content = document.getElementById('content-area');
+            content.classList.remove('animate-fade-in');
+            void content.offsetWidth;
+            content.classList.add('animate-fade-in');
+
+            renderView();
+        }
+
+        function setScenario(type) {
+            currentScenario = type;
+            const btnHigh = document.getElementById('btn-high');
+            const btnLow = document.getElementById('btn-low');
+
+            if (type === 'high') {
+                btnHigh.className = "px-4 py-1.5 rounded-md text-xs font-bold transition shadow-sm bg-white text-indigo-600";
+                btnLow.className = "px-4 py-1.5 rounded-md text-xs font-bold transition text-gray-500 hover:text-gray-700";
+            } else {
+                btnHigh.className = "px-4 py-1.5 rounded-md text-xs font-bold transition text-gray-500 hover:text-gray-700";
+                btnLow.className = "px-4 py-1.5 rounded-md text-xs font-bold transition shadow-sm bg-white text-slate-700";
+            }
+            renderView();
+        }
+
+        // --- 核心修改：renderView 連動邏輯 (IRR) ---
+        function renderView() {
+            const product = database[currentProduct];
+            const data = product.rows;
+            const valKey = currentScenario;
+
+            // 1. 取得下拉選單的年份限制
+            let limit = parseInt(document.getElementById('year-select').value) || 50;
+
+            // 2. 找出最接近 (<=) 該年份的數據列，用於顯示 KPI
+            const relevantRows = data.filter(r => r.y <= limit);
+            // 如果找不到 (通常不會發生)，就用最後一筆
+            const targetRow = relevantRows.length > 0 ? relevantRows[relevantRows.length - 1] : data[data.length - 1];
+
+            const totalPrem = targetRow.p_acc;
+            const totalVal = targetRow[valKey];
+
+            // 3. 計算 IRR (簡單估算：期末資產/總成本 的年化複合成長率)
+            let irr = 0;
+            let irrText = "--%";
+            if (totalVal > totalPrem) {
+                irr = (Math.pow(totalVal / totalPrem, 1 / targetRow.y) - 1) * 100;
+                irrText = irr.toFixed(2) + "%";
+            } else {
+                irrText = "還本期"; // 若尚未回本，顯示文字
+            }
+
+            // 4. 更新 KPI 卡片
+            document.getElementById('kpi-prem').textContent = "NT$ " + totalPrem.toLocaleString();
+            document.getElementById('kpi-value').textContent = "NT$ " + totalVal.toLocaleString();
+
+            // 動態更新標籤
+            document.getElementById('kpi-year-label').textContent = `第 ${targetRow.y} 年末預估`;
+
+            // IRR 標題與數值更新
+            document.getElementById('kpi-irr-title').textContent = `內部報酬率 (IRR) - 第 ${targetRow.y} 年`;
+            document.getElementById('kpi-irr').textContent = irrText;
+            document.getElementById('kpi-irr-desc').textContent = `持有至第 ${targetRow.y} 年`;
+
+            document.getElementById('kpi-target').textContent = product.meta.target;
+            document.getElementById('kpi-feature').textContent = product.meta.feature;
+
+            // 5. 更新圖表與表格 (傳入 limit 參數)
+            renderAssetChart(data, valKey, limit);
+            renderBenchmarkChart();
+            renderTable(data, valKey);
+        }
+
+        // --- 核心修改：圖表縮放 ---
+        function renderAssetChart(data, valKey, limit) {
+            const ctx = document.getElementById('assetChart').getContext('2d');
+
+            // 過濾數據，只顯示到選定的年份
+            const filteredData = data.filter(r => r.y <= limit);
+
+            const labels = filteredData.map(r => `Y${r.y}`);
+            const pData = filteredData.map(r => r.p_acc);
+            const gData = filteredData.map(r => r.guar);
+            const vData = filteredData.map(r => r[valKey]);
+
+            if (assetChartInstance) assetChartInstance.destroy();
+
+            assetChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: '累積保費', data: pData, borderColor: '#cbd5e1', borderDash: [5, 5], borderWidth: 2, pointRadius: 3, order: 2 },
+                        { label: '總資產 (含紅利)', data: vData, borderColor: currentScenario === 'high' ? '#fbbf24' : '#94a3b8', backgroundColor: currentScenario === 'high' ? 'rgba(251,191,36,0.15)' : 'rgba(148,163,184,0.1)', fill: '-1', borderWidth: 2, order: 1 },
+                        { label: '保證現金值', data: gData, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, order: 3 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function renderBenchmarkChart() {
+            const ctx = document.getElementById('benchmarkChart').getContext('2d');
+            const years = ['2020', '2021', '2022', '2023', '2024'];
+            const expected = [3.5, 3.5, 3.5, 3.5, 3.5];
+            const actual = [3.1, 3.0, 3.2, 3.5, 3.5];
+
+            if (benchmarkChartInstance) benchmarkChartInstance.destroy();
+
+            benchmarkChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        { label: '建議書預期 (3.5%)', data: expected, borderColor: '#cbd5e1', borderDash: [4, 4], borderWidth: 2, pointRadius: 0 },
+                        { label: '實際宣告', data: actual, borderColor: '#f43f5e', backgroundColor: 'rgba(244, 63, 94, 0.1)', fill: true, borderWidth: 2, pointBackgroundColor: ['#f43f5e', '#f43f5e', '#f43f5e', '#22c55e', '#22c55e'] }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { min: 2.5, max: 4.0 } }
+                }
+            });
+        }
+
+        function renderTable(data, valKey) {
+            const tbody = document.getElementById('data-table-body');
+            tbody.innerHTML = '';
+
+            const limit = parseInt(document.getElementById('year-select').value) || 100;
+
+            data.forEach(r => {
+                if (r.y > limit) return;
+
+                const total = r[valKey];
+                const dividend = total - r.guar;
+                const profitClass = total > r.p_acc
+                    ? '<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold">獲利</span>'
+                    : '<span class="text-gray-400 text-xs">累積</span>';
+
+                let survText = `+${r.surv.toLocaleString()}`;
+                if (currentProduct === 'pak' && r.surv > 0) {
+                    survText += `<br><span class="text-[9px] text-green-500">約 ${(r.surv / 12).toFixed(0)}/月</span>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100 transition">
+                        <td class="px-6 py-4 font-bold text-slate-700">第 ${r.y} 年</td>
+                        <td class="px-6 py-4 text-gray-400 font-mono">${r.p_acc.toLocaleString()}</td>
+                        <td class="px-6 py-4 text-green-600 font-bold">${survText}</td>
+                        <td class="px-6 py-4 text-blue-600 font-mono">${r.guar.toLocaleString()}</td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-amber-600">${total.toLocaleString()}</div>
+                            <div class="text-[10px] text-gray-400">紅利: ${dividend > 0 ? dividend.toLocaleString() : '0'}</div>
+                        </td>
+                        <td class="px-6 py-4">${profitClass}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.onload = init;
+
+    </script>
+</body>
+
+</html>
